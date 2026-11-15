@@ -95,6 +95,7 @@ chatbot/
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
+├── vercel.json               # Configuración del despliegue en Vercel
 │
 ├── assets/
 │   ├── styles.css            # Diseño visual
@@ -151,6 +152,34 @@ python app.py
 ```bash
 python -m pytest tests/ -v
 ```
+
+---
+
+## 6.5 Despliegue en la nube (GitHub + Vercel)
+
+| Recurso | URL |
+|---------|-----|
+| 🌐 Producción (Vercel) | <https://pilasbot.vercel.app> |
+| 📦 Repositorio (GitHub) | <https://github.com/Steven02177/pilasbot> |
+
+**Cómo funciona el despliegue:** `app.py` expone una variable ASGI `app`
+(FastAPI + `gr.mount_gradio_app`) que Vercel detecta automáticamente y ejecuta
+como Python Function; el resto del proyecto (CSS, lógica, pruebas) se sirve
+igual que en local.
+
+**Redesplegar tras un cambio:**
+
+```bash
+git add -A
+git commit -m "Descripción del cambio"
+git push                       # sube el código a GitHub
+vercel deploy --prod           # publica la nueva versión en Vercel
+```
+
+> **Opcional — deploy automático en cada push:** conectar el repositorio con
+> Vercel desde <https://vercel.com> → *Project → Settings → Git → Connect* e
+> instalar la app de Vercel en GitHub. También puede ejecutarse
+> `vercel git connect` desde la terminal.
 
 ---
 
