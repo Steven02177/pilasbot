@@ -359,6 +359,30 @@ def build_app() -> gr.Blocks:
 demo = build_app()
 
 
+# ---------------------------------------------------------------------------
+# Punto de entrada ASGI (Vercel / uvicorn / gunicorn)
+# ---------------------------------------------------------------------------
+# Vercel detecta `app.py` con una variable ASGI llamada `app` y la ejecuta como
+# Function. Al importar el módulo (no al ejecutarlo como script) se monta el
+# Blocks de Gradio sobre FastAPI con el mismo CSS y tema del modo local.
+
+def _build_asgi_app():
+    from fastapi import FastAPI
+
+    fastapi_app = FastAPI(title=APP_TITLE)
+    return gr.mount_gradio_app(
+        fastapi_app,
+        demo,
+        path="/",
+        css=_load_css(),
+        theme=gr.themes.Soft(primary_hue="emerald", neutral_hue="slate"),
+        ssr_mode=False,
+    )
+
+
+app = _build_asgi_app() if __name__ != "__main__" else None
+
+
 if __name__ == "__main__":
     demo.launch(
         server_name="127.0.0.1",
